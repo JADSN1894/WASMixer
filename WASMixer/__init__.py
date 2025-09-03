@@ -225,24 +225,24 @@ class WASMixer:
         # import export
         for item in self.wasm_binary.module.import_sec:
             if item.module != 'wasi_snapshot_preview1':
-                item.module = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(item.module)))
-                item.name = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(item.name)))
+                item.module = ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(item.module)))
+                item.name = ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(item.name)))
         for item in self.wasm_binary.module.export_sec:
             if item.name != '_start' and item.desc.tag == 0:
-                item.name = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(item.name)))
+                item.name = ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(item.name)))
         # debug information
         for custom in self.wasm_binary.module.custom_secs:
             if custom.name == 'name':
                 if custom.name_data.funcNameSubSec != None:
                     for func_name in custom.name_data.funcNameSubSec:
-                        func_name.name = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(func_name.name)))
+                        func_name.name = ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(func_name.name)))
                 if custom.name_data.dataNameSubSec != None:
                     for data_name in custom.name_data.dataNameSubSec:
-                        data_name.name = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(data_name.name)))
+                        data_name.name = ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(data_name.name)))
                 if custom.name_data.globalNameSubSec != None:
                     for global_name in custom.name_data.globalNameSubSec:
-                        global_name.name = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(global_name.name)))
+                        global_name.name = ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(global_name.name)))
             else:
                 length = len(custom.custom_sec_data)
-                custom.name = '.' + ''.join(random.sample('zyxwvutsrqponmlkjihgfedcba', len(custom.name)))
+                custom.name = '.' + ''.join(random.choices('zyxwvutsrqponmlkjihgfedcba', k=len(custom.name)))
                 custom.custom_sec_data = bytes([random.randint(1, 80)] * length)
