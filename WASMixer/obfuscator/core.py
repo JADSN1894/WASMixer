@@ -1,10 +1,30 @@
 from WASMixer.obfuscator.utils import *
+from WASMixer.parser.types import FuncType
+from typing import Optional, Union, Any
 
 
 class CodeObfuscator:
 
     def __init__(self, binary):
         self.wasm_binary = binary
+
+    def _ensure_type_index(self, func_type_id: Union[int, FuncType, Any]) -> Optional[int]:
+        """
+        Ensure func_type_id is an integer type index. If func_type_id is a FuncType,
+        return its index in module.type_sec (append if missing). If it's already an int,
+        return it. If it's neither, return None.
+        """
+        if isinstance(func_type_id, int):
+            return func_type_id
+        if isinstance(func_type_id, FuncType):
+            # try to find an identical type
+            for ti, t in enumerate(self.wasm_binary.module.type_sec):
+                if hasattr(t, 'param_types') and t.param_types == func_type_id.param_types and t.result_types == func_type_id.result_types:
+                    return ti
+            # not found: append and return new index
+            self.wasm_binary.module.type_sec.append(func_type_id)
+            return len(self.wasm_binary.module.type_sec) - 1
+        return None
 
     def instr_flatten(self, instr_list, split_num, block_type, func_id, Collatz_func_id=None):
 
@@ -277,6 +297,13 @@ class CodeObfuscator:
                     func_type_id = import_func_list[func_id].desc.func_type
                 else:
                     func_type_id = self.wasm_binary.module.func_sec[func_id - self.wasm_binary.get_import_func_num()]
+                # Normalize func_type_id to a type index (int) if needed
+                norm: Optional[int] = self._ensure_type_index(func_type_id)
+                if norm is None:
+                    # unexpected type for func_type_id, skip transforming this call
+                    continue
+                func_type_id = norm
+
                 # Build call_indirect instruction
                 expr[_] = Instruction(CallIndirect, func_type_id)
                 # Get the index of this function in funcref
@@ -341,6 +368,13 @@ class CodeObfuscator:
                     func_type_id = self.wasm_binary.module.import_sec[func_id].desc.func_type
                 else:
                     func_type_id = self.wasm_binary.module.func_sec[func_id - self.wasm_binary.get_import_func_num()]
+                # Normalize func_type_id to a type index (int) if needed
+                norm: Optional[int] = self._ensure_type_index(func_type_id)
+                if norm is None:
+                    _ += 1
+                    continue
+                func_type_id = norm
+
                 # Build call_indirect instruction
                 expr[_] = Instruction(CallIndirect, func_type_id)
                 # Get the index of this function in funcref
