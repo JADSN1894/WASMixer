@@ -24,6 +24,9 @@ python main.py <wasm_file> [options]
 - `--alias`: Apply alias disruption.
 - `--name`: Apply name obfuscation.
 - `--memory`: Apply memory obfuscation.
+- `--collatz` : Apply Collatz transformation on all applicable obfuscations")
+    - `--cf` : Collatz transformation on flattening
+    - `--ca` : Collatz transformation on alias disruption
 - `--all`: Apply all obfuscation levels.
 - `--safe`: Do not overwrite the original file; process a copy named `<name>_mixr.wasm`.
 - `--list`: List available obfuscation levels and exit.

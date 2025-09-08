@@ -51,16 +51,22 @@ def obfuscate_wasm(input_path: str, output_path: str, args: argparse.Namespace) 
     obfuscator = WASMixer(obf_input)
     did_something = False
     if args.flatten:
-        obfuscator.code_flatten()
+        if args.cf or args.collatz:
+            obfuscator.code_flatten(collatz=True)
+        else:
+            obfuscator.code_flatten()
         did_something = True
     if args.alias:
-        obfuscator.alias_disruption()
+        if args.ca or args.collatz:
+            obfuscator.alias_disruption(collatz=True)
+        else:
+            obfuscator.alias_disruption()
         did_something = True
     if args.name:
         obfuscator.name_obfuscation()
         did_something = True
     if args.memory:
-        obfuscator.memory_obfuscation(key=0)
+        obfuscator.memory_obfuscation()
         did_something = True
     if not did_something:
         print("No obfuscation level selected. Use --list to see options.")
@@ -82,6 +88,9 @@ def main() -> None:
       --alias       Apply alias disruption
       --name        Apply name obfuscation
       --memory      Apply memory obfuscation
+      --collatz     Apply Collatz transformation on all applicable obfuscations
+        --cf          Collatz transformation on flattening
+        --ca          Collatz transformation on alias disruption
       --all         Apply all obfuscation levels
       --safe        Do not overwrite original file; process a copy
       --list        List available obfuscation levels and exit
@@ -92,6 +101,9 @@ def main() -> None:
     parser.add_argument("--alias", action="store_true", help="Apply alias disruption")
     parser.add_argument("--name", action="store_true", help="Apply name obfuscation")
     parser.add_argument("--memory", action="store_true", help="Apply memory obfuscation")
+    parser.add_argument("--collatz", action="store_true", help="Apply Collatz transformation on all applicable obfuscations")
+    parser.add_argument("--cf", action="store_true", help="Collatz transformation on flattening")
+    parser.add_argument("--ca", action="store_true", help="Collatz transformation on alias disruption")
     parser.add_argument("--list", action="store_true", help="List available obfuscation levels")
     parser.add_argument("--all", action="store_true", help="Apply all obfuscation levels")
     parser.add_argument("--safe", action="store_true", help="Do not overwrite original file; process a copy.")
