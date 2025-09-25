@@ -1,10 +1,10 @@
-CC=/Users/ping/PL/wasi-sdk/bin/clang
+CC=/home/obfuscator/Github_Project/MPIWasm/wasi-sdk-20.0/bin/clang
 
 ORIGIN=origin
 FLATTEN=flatten
-ALIAS_DISRUPTION=alias_disruption
+CALLTOINDIRECT=call
 
-CFLAGS += --sysroot=/Users/ping/PL/wasi-sdk/share/wasi-sysroot
+CFLAGS += --sysroot=/home/obfuscator/Github_Project/MPIWasm/wasi-sdk-20.0/share/wasi-sysroot
 
 SRCS =$(wildcard *.c)
 # OBJS =$(patsubst %.c,%.wasm,$(SRCS))
@@ -13,10 +13,10 @@ OBFUSCTATED_WATOBJECTS =$(patsubst %.wasm,%.wat,$(wildcard $(OBFUSCATED)/*.wasm)
 ORIGIN_WASM := $(addprefix $(ORIGIN)/,$(notdir $(SRCS:.c=.wasm)))
 
 FLATTEN_WASM := $(addprefix $(FLATTEN)/,$(notdir $(SRCS:.c=.wasm)))
-ALIAS_DISRUPTION_WASM := $(addprefix $(ALIAS_DISRUPTION)/,$(notdir $(SRCS:.c=.wasm)))
+CALLTOINDIRECT_WASM := $(addprefix $(CALLTOINDIRECT)/,$(notdir $(SRCS:.c=.wasm)))
 
 .PHONY: compile, convert, clean
-compile: $(ORIGIN_WASM) $(FLATTEN_WASM) $(ALIAS_DISRUPTION_WASM)
+compile: $(ORIGIN_WASM) $(FLATTEN_WASM) $(CALLTOINDIRECT_WASM)
 
 $(ORIGIN)/%.wasm: %.c
 	$(CC) $(CFLAGS) $< -O0 -o $@
@@ -24,7 +24,7 @@ $(ORIGIN)/%.wasm: %.c
 $(FLATTEN)/%.wasm: %.c
 	$(CC) $(CFLAGS) $< -O0 -o $@
 
-$(ALIAS_DISRUPTION)/%.wasm: %.c
+$(CALLTOINDIRECT)/%.wasm: %.c
 	$(CC) $(CFLAGS) $< -O0 -o $@
 
 convert: $(ORIGIN_WATOBJECTS) $(OBFUSCTATED_WATOBJECTS)
@@ -38,8 +38,8 @@ $(OBFUSCATED)/%.wat: $(OBFUSCATED)/%.wasm
 clean:
 	rm -rf $(ORIGIN)
 	rm -rf $(FLATTEN)
-	rm -rf $(ALIAS_DISRUPTION)
+	rm -rf $(CALLTOINDIRECT)
 
 	mkdir $(ORIGIN)
 	mkdir $(FLATTEN)
-	mkdir $(ALIAS_DISRUPTION)
+	mkdir $(CALLTOINDIRECT)
