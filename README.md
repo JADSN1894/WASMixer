@@ -2,6 +2,17 @@
 
 WASMixer consists of two main functions: the data obfuscator and the code obfuscator. The data obfuscator randomizes readable names and encrypts/decrypts memory areas at runtime. The code obfuscator manipulates instructions and control flow through techniques like alias disruption, control flow flattening, and Collatz-based opaque predicates to thwart human reverse engineering and static analysis.
 
+## Usage
+
+### Install Python 3.10 if needed
+uv python install 3.10
+
+### Create virtualenv with Python 3.10
+uv venv --python 3.10
+
+### Install WASMixer
+uv pip install --editable .
+
 ## Getting Started
 
 ### Docker
@@ -26,3 +37,4 @@ python3 obfuscate_benchmark.py
 ### CLI 
 
 See [details here](./cli/README.md).
+
