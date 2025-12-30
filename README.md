@@ -13,6 +13,12 @@ uv venv --python 3.10
 ### Install WASMixer
 uv pip install --editable .
 
+### Obsfucator
+uv run main.py ../benchmark/mining_programs/1.wasm --safe --all
+
+### Print textual form
+wasm-tools print --skeleton ../benchmark/mining_programs/1_mixr.wasm -o two.wasm
+
 ## Getting Started
 
 ### Docker
@@ -37,4 +43,5 @@ python3 obfuscate_benchmark.py
 ### CLI 
 
 See [details here](./cli/README.md).
+
 
