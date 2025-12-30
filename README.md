@@ -20,7 +20,7 @@ WASMixer consists of two main functions: the data obfuscator and the code obfusc
 `uv run cli/main.py ./benchmark/mining_programs/1.wasm --safe --all`
 
 ### Print textual form
-`wasm-tools print --skeleton ../benchmark/mining_programs/1_mixr.wasm -o two.wasm`
+`wasm-tools print --skeleton ./benchmark/mining_programs/1_mixr.wasm -o 1_mixr_text.wasm`
 
 ## Getting Started
 
@@ -46,6 +46,7 @@ python3 obfuscate_benchmark.py
 ### CLI 
 
 See [details here](./cli/README.md).
+
 
 
 
